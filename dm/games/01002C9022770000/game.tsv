@@ -22,9 +22,13 @@ romfs_marker	movie_en/mp4/sora_1st_ed.mp4
 zip_store	.bmp:.mp4:.otf:.png:.metallib
 
 # ---- Memory ----
-# The engine reserves ten times its allocator size in virtual address space on the Mac.
-# It uses a 2.02 GB physical heap; the large alias reservation is virtual, not resident.
-mem_reserve	0x1100000000
+# The engine reserves ten times its allocator size in virtual address space; patches.py cuts that to
+# three times (3.38 GiB), which the 3.46875 GiB alias region below holds after the SDK's 62 MB node
+# area. The game uses a 2.02 GB physical heap; the large reservation is virtual, not resident.
+# This is a 6 GiB block, the iPhone's single-reservation limit without extended virtual addressing:
+# 256 MB in front + 3.46875 GiB alias region + 256 MB stacks + 2.03125 GiB heap region (the
+# 0x81200000 heap request fits). The Mac adds its own 64 GB alias region and takes nothing from it.
+mem_reserve	0x180000000
 mem_stack	0x10000000
 app_pool	0xCD500000
 sys_resource	0x1000000
@@ -34,6 +38,7 @@ depth_mode	zero
 shader_groups	/asset/=asset /voice/=voice /voice_en/=voiceen /se/=se /vfx/=vfx /scene/=scene /script_de/=scriptde /script_en/=scripten /script_es/=scriptes /script_fr/=scriptfr /table_de/=tablede /table_en/=tableen /table_es/=tablees /table_fr/=tablefr /asset_fr/=assetfr /asset_de/=assetde /asset_es/=assetes /layout/=layout /asset_en/=asseten /bgm1/=bgm1 /bgm2/=bgm2 /bgm3/=bgm3 /system/=system /movie_en/=movieen
 shader_note	Trails in the Sky 1st Chapter shaders
 
-# ---- Heap check on the Mac ----
-# the game asked for a 2.02 GB heap: a 2.125 GB heap region
-mem_alias	0x1000000000
+# ---- Address space ----
+# The iPhone alias region: the SDK's 62 MB node area + the engine's 3.38 GiB region + 28 MiB slack.
+# The heap region is what mem_reserve leaves after 256 MB in front, this alias region and the stacks.
+mem_alias	0xDE000000

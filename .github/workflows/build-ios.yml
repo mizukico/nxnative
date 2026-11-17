@@ -1,7 +1,8 @@
 # Fork build for mizukico/nxnative, based on mizukico/Bayo3-T's
 # .github/workflows/build-baidu.yml ("NxNative - Generic IPA Builder").
-# The nxnative source is this fork's main, which carries PR #1002's
-# dm/games/01002C9022770000 profile; the Baidu Netdisk input/output logic is unchanged.
+# The nxnative source is this fork's main, which carries the Korean/Asian 1.0.7
+# dm/games/01001E9023920000 profile (and PR #1002's international profile); the Baidu Netdisk
+# input/output logic is unchanged.
 # Required repository secrets: BDUSS, STOKEN (Baidu Netdisk login). None else.
 # Builds an unsigned iOS IPA; no signing secrets are needed.
 name: NxNative - iOS IPA Builder (fork)
@@ -10,10 +11,10 @@ on:
   workflow_dispatch:
     inputs:
       base_title_id:
-        description: "Base game title ID (16 hex). Default 01002C9022770000 = Trails in the Sky 1st Chapter (international, profile in dm/games); clear to auto-detect from the NSP."
+        description: "Base game title ID (16 hex). Default 01001E9023920000 = Trails in the Sky 1st Chapter (Korean/Asian 1.0.7, profile in dm/games); clear to auto-detect from the NSP."
         required: false
         type: string
-        default: "01002C9022770000"
+        default: "01001E9023920000"
       game_path:
         description: "百度网盘中的游戏目录；递归下载目录内所有 NSP/XCI 文件"
         required: true
@@ -66,8 +67,9 @@ jobs:
     timeout-minutes: 360
 
     steps:
-      # The nxnative source is this fork (main carries the merged PR #1002 profile),
-      # not seedds/nxnative: upstream main has no dm/games/01002C9022770000.
+      # The nxnative source is this fork (main carries the Korean 1.0.7 profile and PR #1002),
+      # not seedds/nxnative: upstream main has neither dm/games/01001E9023920000 nor
+      # dm/games/01002C9022770000.
       - name: Checkout nxnative fork main
         uses: actions/checkout@v4
         with:
@@ -87,7 +89,7 @@ jobs:
           BASE_TITLE_ID: ${{ inputs.base_title_id }}
         run: |
           set -euo pipefail
-          TITLE_ID="$(echo "${BASE_TITLE_ID:-01002C9022770000}" | tr '[:lower:]' '[:upper:]')"
+          TITLE_ID="$(echo "${BASE_TITLE_ID:-01001E9023920000}" | tr '[:lower:]' '[:upper:]')"
           if [[ ! "$TITLE_ID" =~ ^[0-9A-F]{16}$ ]]; then
             echo "::error::base_title_id must be exactly 16 hexadecimal characters, got: $TITLE_ID"
             exit 1

@@ -1,0 +1,42 @@
+# Trails in the Sky 1st Chapter (01001E9023920000, Korean/Asian release, update 1.0.7, v458752),
+# SDK 19.3.13, NVN: Falcom's SORA engine.
+
+# ---- Identity ----
+title_id	01001E9023920000
+program_id	01001E9023920000
+
+# ---- App ----
+name	Trails in the Sky 1st Chapter
+ipa	The1st.ipa
+app_category	public.app-category.games
+
+# ---- Versions ----
+build	v458752	1.0.7	main=4f4fd1aed39eb96a649aba489ad3767d	subsdk0=fc537f0b21c880e89d6f247d22a150ca	sdk=148394139d9d26ca8afd5c9ba5d30601
+package	v458752
+shader_versions	v458752
+
+# ---- Files ----
+# every module main imports from; subsdk0 is NintendoSDK_movie
+modules	main subsdk0 sdk
+romfs_marker	movie_sc/mp4/sora_1st_ed.mp4
+zip_store	.bmp:.mp4:.otf:.png:.metallib
+
+# ---- Memory ----
+# The NPDM declares 16 MB of system resource (virtual address memory) and main sets a heap: the heap
+# check reads a 0x81200000 request. The engine also reserves ten times its allocator size in virtual
+# address space; patches.py cuts that to three times (3.38 GiB), which the 3.46875 GiB alias region
+# below holds after the SDK's 62 MB node area.
+# This is a 6 GiB block, the iPhone's single-reservation limit without extended virtual addressing:
+# 256 MB in front + 3.46875 GiB alias region + 256 MB stacks + 2.03125 GiB heap region (the
+# 0x81200000 heap request fits). The Mac adds its own 64 GB alias region and takes nothing from it.
+mem_reserve	0x180000000
+mem_alias	0xDE000000
+mem_stack	0x10000000
+app_pool	0xCD500000
+sys_resource	0x1000000
+# At boot the game sets near depth to zero; prebuilt vertex pipelines must use main0_z.
+depth_mode	zero
+
+# ---- Shader split ----
+shader_groups	/asset/=asset /voice/=voice /se/=se /vfx/=vfx /scene/=scene /script_kr/=scriptkr /script_sc/=scriptsc /script_tc/=scripttc /table_kr/=tablekr /table_sc/=tablesc /table_tc/=tabletc /layout/=layout /asset_kr/=assetkr /asset_sc/=assetsc /asset_tc/=assettc /bgm1/=bgm1 /bgm2/=bgm2 /bgm3/=bgm3 /system/=system /movie_kr/=moviekr /movie_sc/=moviesc /movie_tc/=movietc /system_nx/=systemnx
+shader_note	Trails in the Sky 1st Chapter: GLSLC compiler outputs (SDK 19) in /asset/nx/shader/*.nvn and in main
