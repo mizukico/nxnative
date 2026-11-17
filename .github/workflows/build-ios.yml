@@ -749,6 +749,19 @@ jobs:
             exit 1
           fi
 
+      # The profile's shader tables must be the ones this split produces; when they
+      # differ, keep the split's tables so the profile can be corrected from the run.
+      - name: Upload split shader tables on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: NxNative-split-tables
+          path: |
+            ${{ runner.temp }}/GameFiles/*/shader/pkg.partial/tables/
+            ${{ runner.temp }}/GameFiles/*/logs/shader_split.log
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Upload RomFS to Baidu Netdisk before Metal
         id: upload_romfs_baidu
         if: success() && steps.prepare.outputs.romfs_ready == 'true' && steps.upload_mode.outputs.img_target == 'baidu' && steps.verify_baidu_upload.outcome == 'success'
