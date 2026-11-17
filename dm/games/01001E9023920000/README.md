@@ -25,6 +25,12 @@ allocator function starts at `main+0x56c120`.
   outputs in `/asset/nx/shader/*.nvn` and in `main`.
 - The tables are from the 1.0.7 update; the base 1.0.0 and update 1.0.7 NSPs are in the game's NSP
   folder, outside this repository.
+- The tables were split again with the current `dm/gfx/tools/shader_split.py` from that extraction
+  (build `4f4fd1aed39eb96a649aba489ad3767d`). The profile's first copy came from an older splitter,
+  which keyed `/asset/nx/shader/light_cull.nvn` as `ece8145773ee095d` rather than `f9def5d93748a39f`,
+  `main`'s compute kernel as `aecb69afbb394ff9` rather than `a370ad7eceb0897a`, and put `main`'s
+  GLSLC vertex shader at `0x62f804` rather than `0x625130`; the split also writes the `#` header lines
+  and the `package/index/stage/dm_ctl_sha16/source` column header the profile lacked.
 
 ## Status
 
