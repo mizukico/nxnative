@@ -5,8 +5,8 @@ CUTS = {
   # 1.0.7 (v458752) main: Falcom's SORA engine gives its "native allocator" a virtual address region of
   # ten times the allocator's own capacity (main+0x56c1a4 fmov d0,#10.0: capacity 0x48200000, rounded
   # up to 2 MB, 0x2d1400000 = 12.1 GB). On the Switch the alias region is 64 GB, but the engine only
-  # maps what it uses (about 0.4 GB through the opening), so the iPhone profile in game.tsv cuts the
-  # factor to 2 (2.26 GiB).
+  # maps what it uses -- 1.44 GB after three minutes on an iPhone A19 (alias high-water +2.44 GB of
+  # the 3.47 GB region) -- so the iPhone profile in game.tsv cuts the factor to 2 (2.26 GiB).
   # The alias region is shared with the SDK: its AddressRegionManager takes the node area 0x3fe00000
   # (0.999 GiB) at the start of the 3.46875 GiB region, and this sdk build (14839413) has no
   # node-area cut registered in dm/tools/sdk_patches.py, so 2.47 GiB is left to hand out. A factor of

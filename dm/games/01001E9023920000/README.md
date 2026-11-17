@@ -41,7 +41,13 @@ shipped with, is what the iPhone rejected.)
   `nnosInitialize`, opened its 2.02 GB heap and ran `main`'s initializers, then the native
   allocator's address-space reservation failed with `0x1803` under the three-times cut, followed by
   `CRASH sig=11 pc=sdk+0x15576c`. The cut is now two times (2.26 GiB), which fits the 2.47 GiB the
-  alias region has left after the SDK's 1 GB node area. **A device boot of that build is the next
-  step.** If the allocator later exhausts 2.26 GiB, the next lever is the `sdk` node-area cut
-  (1 GB to 62 MB, `dm/tools/sdk_patches.py`) for the `sdk` build `148394139d9d26ca8afd5c9ba5d30601`,
-  which would widen the alias region's usable part to 3.41 GiB.
+  alias region has left after the SDK's 1 GB node area.
+- The two-times build runs on the device: 4,864 frames to 116.66 s at p99 16.67 ms with no dropped
+  frames, footprint 1,985 MiB, thermal 2, no `[RED]` line; `[mem] address region 2.25 GB at alias
+  +1.00 GB` is that cut taking effect, and the alias region's mapped high-water reached +2.44 GB of
+  3.47 GB, so the engine used 1.44 GB of its 2.26 GiB in three minutes.
+- **Open**: whether 2.26 GiB holds for a long session (1.44 GB went in three minutes). If `0x1803`
+  returns, the next lever is the `sdk` node-area cut (1 GB to 62 MB, `dm/tools/sdk_patches.py`) for
+  the `sdk` build `148394139d9d26ca8afd5c9ba5d30601`, which widens the alias region's usable part to
+  3.41 GiB and would let the factor go to 2.5 times. Also open: the game's own movie warning
+  (`Try to use the audio data of the movie file but there is no audio data`), DLC content and saves.
