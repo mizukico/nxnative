@@ -24,8 +24,9 @@ zip_store	.bmp:.mp4:.otf:.png:.metallib
 # ---- Memory ----
 # The NPDM declares 16 MB of system resource (virtual address memory) and main sets a heap: the heap
 # check reads a 0x81200000 request. The engine also reserves ten times its allocator size in virtual
-# address space; patches.py cuts that to three times (3.38 GiB), which the 3.46875 GiB alias region
-# below holds after the SDK's 62 MB node area.
+# address space; patches.py cuts that to two times (2.26 GiB). The 3.46875 GiB alias region below
+# must also hold the SDK's node area, 0x3fe00000 (0.999 GiB; this sdk build has no node-area cut),
+# which leaves 2.47 GiB: a three-times cut asked for 3.38 GiB and failed with 0x1803 on an iPhone.
 # This is a 6 GiB block, the iPhone's single-reservation limit without extended virtual addressing:
 # 256 MB in front + 3.46875 GiB alias region + 256 MB stacks + 2.03125 GiB heap region (the
 # 0x81200000 heap request fits). The Mac adds its own 64 GB alias region and takes nothing from it.
